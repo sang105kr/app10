@@ -5,7 +5,11 @@ import com.kh.app.domain.entity.Member;
 import java.util.List;
 
 public interface MemberDAO {
-  //가입
+  /**
+   * 가입
+   * @param member
+   * @return
+   */
   Member save(Member member);
 
   //수정
