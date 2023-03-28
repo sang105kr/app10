@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품조회</title>
+</head>
+<body>
+<div class="wrap">
+  <h3>상품조회</h3>
+  <div>
+    <form action="" method="" th:object="${detailForm}">
+      <div>
+        <label for="" >상품번호</label>
+        <input type="text" name="productId" readonly th:field="*{productId}">
+      </div>
+      <div>
+        <label for="">상품명</label>
+        <input type="text" name="pname" readonly th:field="*{pname}">
+      </div>
+      <div>
+        <label for="">수량</label>
+        <input type="text" name="quantity" readonly th:field="*{quantity}">
+      </div>
+      <div>
+        <label for="">가격</label>
+        <input type="text" name="price" readonly th:field="*{price}">
+      </div>
+      <div>
+        <button type="button" id="btnUpdate" th:text="#{button.update}">수정</button>
+        <button type="button" id="btnDelete" th:text="#{button.delete}">삭제</button>
+        <button type="button" id="btnFindAll" th:text="#{button.list}">목록</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  const $btnUpdate = document.getElementById('btnUpdate');
+  const $btnDelete = document.getElementById('btnDelete');
+  const $btnFindAll = document.getElementById('btnFindAll');
+  //상품 아이디
+  const $productId = document.getElementById('productId');
+
+  const btnUpdate_h = e=>{
+    globalThis.location.href = `/products/${$productId.value}/edit`;
+  }
+  const btnDelete_h = e=>{
+    if(confirm('삭제 하시겠습니까?')){
+      globalThis.location.href = `/products/${$productId.value}/del`;
+    }
+  }
+  const btnFindAll_h = e=>{
+   globalThis.location.href = `/products`;
+  }
+
+  $btnUpdate.addEventListener('click',btnUpdate_h, false);
+  $btnDelete.addEventListener('click',btnDelete_h, false);
+  $btnFindAll.addEventListener('click',btnFindAll_h, false);
+
+</script>
+</body>
+</html>

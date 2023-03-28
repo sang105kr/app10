@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>상품관리-CSR</title>
+    <style>
+      /* { outline:1px solid red }*/
+      .fieldError {
+        color: red;
+        font-weight: bold;
+        font-size: 0.8em;
+      }
+      .fieldSuccess {
+        color: green;
+        font-weight: bold;
+        font-size: 0.8em;
+      }
+      #productList .wrap .head,
+      #productList .wrap .body {
+        display: grid;
+        grid-template-columns: 50px 50px 100px 50px 100px;
+        grid-auto-rows: 2em;
+      }
+
+      #productList .wrap .head {
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      #productList .wrap .head div,
+      #productList .wrap .body div {
+        border: 1px solid gray;
+      }
+
+      /* 버튼 */
+      .hidden {
+        display: none;
+      }
+
+      /* 삭제 팝업 */
+      #delPopup {
+        border: 1px solid gray;
+        border-radius: 5px;
+        background-color: gray;
+        color: white;
+        box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
+      }
+      #delPopup::backdrop {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    </style>
+    <script type="module" src="./common.js" th:src="@{/js/common.js}"></script>
+  </head>
+  <body>
+    <h3>상품관리-CSR</h3>
+    <hr />
+    <!--상품등록-->
+    <div>
+      <form action="">
+        <div><span class="fieldError" id="globalErr"></span></div>
+        <div><span class="fieldSuccess" id="globalSuccess"></span></div>
+        <div>
+          <label for="productId">상품아이디</label>
+          <input type="text" id="productId" size="10" />
+          <button type="button" id="findBtn">조회</button>
+          <span class="fieldError" id="productIdErr"></span>
+        </div>
+        <div>
+          <label for="pname">상품명</label>
+          <input type="text" id="pname" />
+          <span class="fieldError" id="pnameErr"></span>
+        </div>
+        <div>
+          <label for="quantity">수량</label>
+          <input type="text" id="quantity" />
+          <span class="fieldError" id="quantityErr"></span>
+        </div>
+        <div>
+          <label for="price">단가</label>
+          <input type="text" id="price" />
+          <span class="fieldError" id="priceErr"></span>
+        </div>
+        <!--등록상태-->
+        <div class="btngrp add">
+          <button type="button" id="addBtn">등록</button>
+        </div>
+        <!--조회상태-->
+        <div class="btngrp read hidden">
+          <button type="button" id="toAddBtn">신규</button>
+          <button type="button" id="modifyBtn">수정</button>
+          <button type="button" id="delBtn">삭제</button>
+        </div>
+      </form>
+    </div>
+    <!--상품목록-->
+    <div id="productList">
+      <h3>상품목록</h3>
+      <div><button id="delPartsBtn">삭제</button><button id="listBtn">목록</button></div>
+      <div class="wrap">
+        <div class="head">
+          <div id="all">선택</div>
+          <div>ID</div>
+          <div>상품명</div>
+          <div>수량</div>
+          <div>가격</div>
+        </div>
+        <div class="body">
+          <!-- <div>1</div>
+          <div>상품명1</div>
+          <div>10</div>
+          <div>1000</div>
+          <div>2</div>
+          <div>상품명2</div>
+          <div>20</div>
+          <div>2000</div>
+          <div>3</div>
+          <div>상품명3</div>
+          <div>30</div>
+          <div>3000</div> -->
+          <p>가져오는중...</p>
+        </div>
+      </div>
+    </div>
+
+    <!--삭제 dialog-->
+    <dialog id="delPopup">
+      <p>삭제하시겠습니까?</p>
+      <form method="dialog">
+        <button value="del">삭제</button>
+        <button value="cancel">취소</button>
+      </form>
+    </dialog>
+    <script type="module">
+      import { ajax } from '/js/common.js';
+
+      const $productFields = { productId, pname, quantity, price };
+
+      const $allBtn = {
+        toAdd: document.getElementById('toAddBtn'),
+        list: document.getElementById('listBtn'),
+        add: document.getElementById('addBtn'),
+        find: document.getElementById('findBtn'),
+        modify: document.getElementById('modifyBtn'),
+        del: document.getElementById('delBtn'),
+      };
+
+      const $msg = {
+        success: document.getElementById('globalSuccess'),
+        err: document.getElementById('globalErr'),
+      };
+
+      // 글로벌 성공메세지
+      const errMsg = msg => {
+        $msg.success.textContent = '';
+        $msg.err.textContent = msg;
+      };
+
+      // 글로벌 에러메시지
+      const successMsg = msg => {
+        $msg.success.textContent = msg;
+        $msg.err.textContent = '';
+      };
+
+      //상품등록양식 클리어
+      const clearForm = () => {
+        $productFields.pname.value = '';
+        $productFields.quantity.value = '';
+        $productFields.price.value = '';
+      };
+
+      // 목록
+      const makeRow = p =>
+         `<div><input type='checkbox' name='chk' value='${p.productId}'/></div>` +
+         `<div>${p.productId}</div>` +
+         `<div>${p.pname}</div>` +
+         `<div>${p.quantity}</div>` +
+         `<div>${p.price}</div>`;
+
+      const list = res => {
+        if (res.header.rtcd == '00') {
+          const html = res.data.map(p => makeRow(p)).join('');
+          document.querySelector('.wrap .body').innerHTML = html;
+        } else {
+          throw new Error(`${res.header.rtmsg}`);
+        }
+      };
+
+      const list_h = e => {
+        const url = `http://localhost:9080/api/products`;
+        ajax
+          .get(url)
+          .then(res => res.json())
+          .then(list) //.then(res => list(res))
+          .catch(err => errMsg(err.message));
+      };
+      $allBtn.list.addEventListener('click', list_h, false);
+
+      // 등록
+      const add = res => {
+        if (res.header.rtcd == '00') {
+          successMsg(`상품번호: ${res.data.productId} 가 등록되었습니다.`);
+          document.querySelector('form').reset();
+          list_h();
+        } else {
+          throw new Error(`${res.header.rtmsg}`);
+        }
+      };
+      const add_h = e => {
+        const url = `http://localhost:9080/api/products`;
+        const payload = {
+          pname: $productFields.pname.value,
+          quantity: $productFields.quantity.value,
+          price: $productFields.price.value,
+        };
+
+        //유효성체크
+        ajax
+          .post(url, payload)
+          .then(res => res.json())
+          .then(add) //.then(res => add(res))
+          .catch(err => errMsg(err.message));
+      };
+      $allBtn.add.addEventListener('click', add_h, false);
+
+      // 조회
+      const find = res => {
+        if (res.header.rtcd == '00') {
+          successMsg(`상품번호: ${res.data.productId} 가 조회되었습니다.`);
+          $productFields.productId.value = res.data.productId;
+          $productFields.pname.value = res.data.pname;
+          $productFields.quantity.value = res.data.quantity;
+          $productFields.price.value = res.data.price;
+        } else if (res.header.rtcd == '99') {
+          errMsg(`찾고자하는 상품이 없습니다`);
+          clearForm();
+        } else {
+          throw new Error(`${res.header.rtmsg}`);
+        }
+      };
+      const find_h = (e, pid) => {
+        const url = `http://localhost:9080/api/products/${pid}`;
+        ajax
+          .get(url)
+          .then(res => res.json())
+          .then(find) //.then(res => find(res))
+          .catch(err => errMsg(err.message));
+      };
+      $allBtn.find.addEventListener(
+        'click',
+        e => {
+          const pid = $productFields.productId.value.trim();
+          if (!pid) {
+            $msg.err = '상품아이디를 입력하세요';
+            return;
+          }
+          //읽기모드 버튼 보이기
+          const readMode = document.querySelector('.btngrp.read');
+          readMode.classList.contains('hidden') &&
+            readMode.classList.remove('hidden');
+
+          //등록버튼 숨기기
+          const addMode = document.querySelector('.btngrp.add');
+          addMode.classList.contains('hidden') ||
+            addMode.classList.add('hidden');
+
+          find_h(e, pid);
+        },
+        false,
+      );
+
+      // 수정
+      const modify = res => {
+        if (res.header.rtcd == '00') {
+          successMsg(`상품번호: ${res.data.productId} 가 수정되었습니다.`);
+          list_h();
+        } else {
+          throw new Error(`${res.header.rtmsg}`);
+        }
+      };
+      const modify_h = (e, pid) => {
+        const url = `http://localhost:9080/api/products/${pid}`;
+        const payload = {
+          pname: $productFields.pname.value,
+          quantity: $productFields.quantity.value,
+          price: $productFields.price.value,
+        };
+        ajax
+          .patch(url, payload)
+          .then(res => res.json())
+          .then(res => modify(res))
+          .catch(err => errMsg(err.message));
+      };
+      $allBtn.modify.addEventListener(
+        'click',
+        e => {
+          const pid = $productFields.productId.value.trim();
+          modify_h(e, pid);
+        },
+        false,
+      );
+
+      // 삭제
+      const del = res => {
+        if (res.header.rtcd == '00') {
+          successMsg(`상품이 삭제되었습니다.`);
+          document.querySelector('form').reset();
+          list_h();
+        } else {
+          throw new Error(`${res.header.rtmsg}`);
+        }
+      };
+      const del_h = (e, pid) => {
+        const url = `http://localhost:9080/api/products/${pid}`;
+        ajax
+          .delete(url)
+          .then(res => res.json())
+          .then(res => del(res))
+          .catch(err => errMsg(err.message));
+      };
+      $allBtn.del.addEventListener(
+        'click',
+        e => {
+          const pid = $productFields.productId.value.trim();
+          if (pid) {
+            // 삭제팝업 띄우기
+            const $delPopup = document.getElementById('delPopup');
+            $delPopup.showModal();
+            // 삭제팝업 닫칠때 버튼값 읽어와서 del이면 삭제 진행
+            $delPopup.addEventListener(
+              'close',
+              e => {
+                if ($delPopup.returnValue != 'del') return;
+                del_h(e, pid);
+              },
+              false,
+            );
+
+            return;
+          } else {
+            errMsg('삭제할 상품번호를 입력하세요');
+            $productFields.productId.focus();
+          }
+        },
+        false,
+      );
+
+      // 신규
+      $allBtn.toAdd.addEventListener(
+        'click',
+        e => {
+          //읽기모드 버튼 숨기기
+          const readMode = document.querySelector('.btngrp.read');
+          readMode.classList.contains('hidden') ||
+            readMode.classList.add('hidden');
+
+          //등록버튼 보이기
+          const addMode = document.querySelector('.btngrp.add');
+          addMode.classList.contains('hidden') &&
+            addMode.classList.remove('hidden');
+
+          //상품 등록 양식 클리어
+          document.querySelector('form').reset();
+        },
+        false,
+      );
+
+      //삭제선택
+      const $all = document.getElementById('all');
+      const all_h = e => {
+        const $chks = document.querySelectorAll('#productList input[name=chk]');
+        //체크된 체그박스 갯수
+        const chkCnt = Array.from($chks).filter(input=>input.checked ).length;
+        if($chks.length == chkCnt){
+          Array.from($chks).forEach(input=>input.checked = false);
+        }else{
+          Array.from($chks).forEach(input=>input.checked = true);
+        }
+      }
+      $all.addEventListener('click',all_h,false);
+
+
+      //삭제선택처리
+      const $delPartsBtn = document.getElementById('delPartsBtn');
+      const delParts = res => {
+        if(res.header.rtcd == 0){
+          list_h();
+        }
+      }
+      const delParts_h = e =>{
+        if(!confirm('삭제하시겠습니까')) return;
+        const $chks = document.querySelectorAll('#productList input[name=chk]');
+        const chks = Array.from($chks).filter(input=>input.checked )
+                                      .map(input=>input.value)
+        const url = '/api/products/items/del';
+        ajax.post(url, chks)
+            .then(res=>res.json())
+            .then(delParts)
+            .catch(err => console.log(err.message));
+      }
+      $delPartsBtn.addEventListener('click',delParts_h,false);
+      //목록 가져오기
+      list_h();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+@charset "UTF-8";
+.field-error {
+  font-size : 0.8em;
+  font-weight: bold;
+  color: red;
+}

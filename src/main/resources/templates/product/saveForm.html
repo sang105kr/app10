@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="#{title.product.add}">상품등록</title>
+  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+</head>
+<body>
+<div class="wrap">
+  <h3 th:text="#{title.product.add}">상품등록</h3>
+  <div>
+    <form id="frm" action="" method="post" th:object="${saveForm}">
+      <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="field-error" th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
+      </div>
+      <div>
+        <label for="pname" th:for="${#ids.next('pname')}" th:text="#{label.product.pname}">상품명</label>
+        <input type="text" name="pname" th:field="*{pname}" minlength="2" maxlength="10" >
+        <span class="field-error"></span>
+        <span class="field-error" th:errors="*{pname}"></span>
+      </div>
+      <div>
+        <label for="quantity" th:for="${#ids.next('quantity')}" th:text="#{label.product.quantity}">수량</label>
+        <input type="text" name="quantity" th:field="*{quantity}" minlength="1" maxlength="10" >
+        <span class="field-error"></span>
+        <span class="field-error" th:errors="*{quantity}"></span>
+      </div>
+      <div>
+        <label for="price" th:for="${#ids.next('price')}" th:text="#{label.product.price}">가격</label>
+        <input type="text" name="price" th:field="*{price}"  minlength="1" maxlength="10">
+        <span class="field-error"></span>
+        <span class="field-error" th:errors="*{price}"></span>
+      </div>
+      <div>
+        <button type="submit" th:text="#{button.add}" id="btnAdd">등록</button>
+        <button type="button" th:text="#{button.list}" onclick="location.href='/products'">목록</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  const add_h = e => {
+    e.preventDefault(); //기본 이벤트 막기
+
+    const $field_errors = document.querySelectorAll('.field-error');
+
+    const clear = () => Array.from($field_errors).forEach(ele=>ele.textContent='');
+    //검증
+    if(pname.value.trim().length == 0){
+      const msg = '상품명을 입력하세요';
+      pname.nextElementSibling.textContent = msg;
+      pname.focus();
+      return;
+    }else {
+      clear();
+    }
+    if(quantity.value.trim().length == 0){
+      const msg = '수량을 입력하세요';
+      quantity.nextElementSibling.textContent = msg;
+      quantity.focus();
+      return;
+    }else {
+      clear();
+    }
+
+    const regExp = /[0-9]/;
+    if(!regExp.test(quantity.value)){
+      const msg = '숫자만 입력하세요';
+      quantity.nextElementSibling.textContent = msg;
+      quantity.focus();
+      return;
+    }else {
+      clear();
+    }
+
+    if(price.value.trim().length == 0){
+      const msg = '가격을 입력하세요';
+      price.nextElementSibling.textContent = msg;
+      price.focus();
+      return;
+    }else {
+      clear();
+    }
+
+    if(!regExp.test(price.value)){
+      const msg = '숫자만 입력하세요';
+      price.nextElementSibling.textContent = msg;
+      price.focus();
+      return;
+    }else {
+      clear();
+    }
+
+    //전송
+    frm.submit();
+  }
+  btnAdd.addEventListener('click',add_h,false);
+</script>
+</body>
+</html>

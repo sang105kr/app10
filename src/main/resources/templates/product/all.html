@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품목록</title>
+</head>
+<body>
+  <div class="wrap">
+    <h3>상품목록</h3>
+    <div>
+      <form id="frm" action="" th:action="@{/products/items/del}" th:method="post">
+      <table>
+        <thead>
+          <tr>
+            <th id="all">선택</th>
+            <th>ID</th>
+            <th>상품명</th>
+            <th>수량</th>
+            <th>가격</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="product : ${products}">
+            <th>
+              <input type="checkbox" name="chk" th:value="${product.productId}">
+            </th>
+            <td th:text="${product.productId}">ID</td>
+            <td >
+              <a href="" th:href="@{/products/{id}/detail(id=${product.productId})}" th:text="${product.pname}"></a>
+            </td>
+            <td th:text="${product.quantity}">수량</td>
+            <td th:text="${product.price}">가격</td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <button id="btnDel" th:text="#{button.delete}">삭제</button>
+        <button id="btnAdd" th:text="#{button.add}" type="button">등록</button>
+      </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    const $btnAdd = document.getElementById('btnAdd');
+    const btnAdd_h = e => location.href = `/products/add`;
+    $btnAdd.addEventListener('click',btnAdd_h,false);
+
+    const $all = document.getElementById('all');
+    const all_h = e => {
+      const $chks = document.querySelectorAll('.wrap table input[name=chk]');
+      //체크된 체그박스 갯수
+      const chkCnt = Array.from($chks).filter(input=>input.checked ).length;
+      if($chks.length == chkCnt){
+        Array.from($chks).forEach(input=>input.checked = false);
+      }else{
+        Array.from($chks).forEach(input=>input.checked = true);
+      }
+    }
+    $all.addEventListener('click',all_h,false);
+
+    //삭제
+    const $btnDel = document.getElementById('btnDel');
+    const del = res => {
+      if(res.header.rtcd == 0){
+        location.href = '/products';
+      }
+    }
+    const del_h = e =>{
+      e.preventDefault();
+      if(!confirm('삭제하시겠습니까')) return;
+      document.getElementById('frm').submit();
+    }
+    $btnDel.addEventListener('click',del_h,false);
+  </script>
+</body>
+</html>
