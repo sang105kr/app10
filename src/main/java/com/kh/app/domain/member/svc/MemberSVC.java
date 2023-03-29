@@ -1,11 +1,11 @@
-package com.kh.app.domain.member.dao;
+package com.kh.app.domain.member.svc;
 
 import com.kh.app.domain.entity.Member;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberDAO {
+public interface MemberSVC {
   /**
    * 가입
    * @param member
@@ -36,5 +36,4 @@ public interface MemberDAO {
 
   //아이디찾기
   Optional<String> findEmailByNickname(String nickname);
-
 }

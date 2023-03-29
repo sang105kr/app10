@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+</head>
+<body>
+  <h3>회원가입</h3>
+  <hr>
+  <form action="" method="post">
+    <div><input type="text" name="email" placeholder="아이디"></div>
+    <div><input type="password" name="passwd" placeholder="비밀번호"></div>
+    <div><input type="password" name="passwdchk" placeholder="비밀번호확인"></div>
+    <div><input type="text" name="nickname" placeholder="별칭" ></div>
+    <div><label for="">성별</label></div>
+    <div>
+      <label for="">남</label><input type="radio" name="gender" value="남자">
+      <label for="">여</label><input type="radio" name="gender" value="여자">
+    </div>
+    <div><label for="">취미</label></div>
+    <div>
+      <label for="">독서</label><input type="checkbox" name="hobby" value="독서">
+      <label for="">수영</label><input type="checkbox" name="hobby" value="수영">
+      <label for="">등산</label><input type="checkbox" name="hobby" value="등산">
+      <label for="">골프</label><input type="checkbox" name="hobby" value="골프">
+    </div>
+    <div><label for="">지역</label></div>
+    <div>
+      <select name="region" id="">
+        <option value="">선택</option>
+        <option value="서울">서울</option>
+        <option value="부산">부산</option>
+        <option value="대구">대구</option>
+        <option value="울산">울산</option>
+      </select>
+    </div>
+    <div><button>가입</button></div>
+  </form>
+</body>
+</html>

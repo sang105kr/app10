@@ -2,9 +2,9 @@ package com.kh.app.web;
 
 import com.kh.app.domain.entity.Product;
 import com.kh.app.domain.product.svc.ProductSVC;
-import com.kh.app.web.form.DetailForm;
-import com.kh.app.web.form.SaveForm;
-import com.kh.app.web.form.UpdateForm;
+import com.kh.app.web.form.product.DetailForm;
+import com.kh.app.web.form.product.SaveForm;
+import com.kh.app.web.form.product.UpdateForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
