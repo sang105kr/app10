@@ -10,34 +10,57 @@
 <body>
   <h3>회원가입</h3>
   <hr>
-  <form action="" method="post">
-    <div><input type="text" name="email" placeholder="아이디"></div>
-    <div><input type="password" name="passwd" placeholder="비밀번호"></div>
-    <div><input type="password" name="passwdchk" placeholder="비밀번호확인"></div>
-    <div><input type="text" name="nickname" placeholder="별칭" ></div>
+  <form action="" method="post" th:object="${joinForm}">
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
+    <div>
+      <input type="text" name="email" placeholder="아이디" th:field="*{email}">
+      <span th:errors="*{email}"></span>
+    </div>
+    <div>
+      <input type="password" name="passwd" placeholder="비밀번호" th:field="*{passwd}">
+      <span th:errors="*{passwd}"></span>
+    </div>
+    <div>
+      <input type="password" name="passwdchk" placeholder="비밀번호확인" th:field="*{passwdchk}">
+      <span th:errors="*{passwdchk}"></span>
+    </div>
+    <div>
+      <input type="text" name="nickname" placeholder="별칭" th:field="*{nickname}">
+      <span th:errors="*{nickname}"></span>
+    </div>
     <div><label for="">성별</label></div>
     <div>
-      <label for="">남</label><input type="radio" name="gender" value="남자">
-      <label for="">여</label><input type="radio" name="gender" value="여자">
+      <label for="">남</label><input type="radio" name="gender" value="남자" th:field="*{gender}">
+      <label for="">여</label><input type="radio" name="gender" value="여자" th:field="*{gender}">
     </div>
     <div><label for="">취미</label></div>
     <div>
-      <label for="">독서</label><input type="checkbox" name="hobby" value="독서">
-      <label for="">수영</label><input type="checkbox" name="hobby" value="수영">
-      <label for="">등산</label><input type="checkbox" name="hobby" value="등산">
-      <label for="">골프</label><input type="checkbox" name="hobby" value="골프">
+      <th:block th:each="hobby:${hobbies}">
+        <label for="" th:for="${#ids.next('hobby')}" th:text="${hobby.decode}">독서</label>
+        <input type="checkbox" name="hobby" value="독서" th:field="*{hobby}" th:value="${hobby.code}">
+      </th:block>
+<!--      <label for="">독서</label><input type="checkbox" name="hobby" value="독서">-->
+<!--      <label for="">수영</label><input type="checkbox" name="hobby" value="수영">-->
+<!--      <label for="">등산</label><input type="checkbox" name="hobby" value="등산">-->
+<!--      <label for="">골프</label><input type="checkbox" name="hobby" value="골프">-->
     </div>
     <div><label for="">지역</label></div>
     <div>
-      <select name="region" id="">
+      <select name="region" id="" th:field="*{region}">
         <option value="">선택</option>
-        <option value="서울">서울</option>
-        <option value="부산">부산</option>
-        <option value="대구">대구</option>
-        <option value="울산">울산</option>
+        <th:block th:each="region:${regions}">
+          <option value="" th:value="${region.code}" th:text="${region.decode}"></option>
+        </th:block>
+<!--        <option value="서울">서울</option>-->
+<!--        <option value="부산">부산</option>-->
+<!--        <option value="대구">대구</option>-->
+<!--        <option value="울산">울산</option>-->
+
       </select>
     </div>
-    <div><button>가입</button></div>
+    <div><button th:text="#{button.join}">가입</button></div>
   </form>
 </body>
 </html>
