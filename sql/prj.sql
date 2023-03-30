@@ -19,7 +19,7 @@ drop sequence product_product_id_seq;
 create table code(
     code_id     varchar2(11),       --코드
     decode      varchar2(30),       --코드명
-    discript    clob,               --코드설명
+    detail      clob,               --코드설명
     pcode_id    varchar2(11),       --상위코드
     useyn       char(1) default 'Y',            --사용여부 (사용:'Y',미사용:'N')
     cdate       timestamp default systimestamp,         --생성일시
@@ -38,10 +38,23 @@ alter table code modify useyn constraint code_useyn_nn not null;
 alter table code add constraint code_useyn_ck check(useyn in ('Y','N'));
 
 --샘플데이터 of code
+insert into code (code_id,decode,pcode_id,useyn) values ('A01','취미',null,'Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0101','수영','A01','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0102','등산','A01','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0103','골프','A01','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0104','영화','A01','Y');
+
+insert into code (code_id,decode,pcode_id,useyn) values ('A02','지역',null,'Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0201','서울','A02','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0202','부산','A02','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0203','대국','A02','Y');
+insert into code (code_id,decode,pcode_id,useyn) values ('A0204','울산','A02','Y');
+
 insert into code (code_id,decode,pcode_id,useyn) values ('B01','게시판',null,'Y');
 insert into code (code_id,decode,pcode_id,useyn) values ('B0101','Spring','B01','Y');
 insert into code (code_id,decode,pcode_id,useyn) values ('B0102','Datbase','B01','Y');
 insert into code (code_id,decode,pcode_id,useyn) values ('B0103','Q_A','B01','Y');
+
 insert into code (code_id,decode,pcode_id,useyn) values ('M01','회원구분',null,'Y');
 insert into code (code_id,decode,pcode_id,useyn) values ('M0101','일반','M01','Y');
 insert into code (code_id,decode,pcode_id,useyn) values ('M0102','우수','M01','Y');
