@@ -10,20 +10,23 @@
 <body>
   <h3>회원가입</h3>
   <hr>
-  <form action="" method="post" th:object="${joinForm}">
+  <form id="frm" action="" method="post" th:object="${joinForm}">
     <div th:if="${#fields.hasGlobalErrors()}">
       <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
     </div>
     <div>
-      <input type="text" name="email" placeholder="아이디" th:field="*{email}">
+      <input type="email" name="email" placeholder="아이디" th:field="*{email}">
+      <span class="error"></span>
       <span th:errors="*{email}"></span>
     </div>
     <div>
       <input type="password" name="passwd" placeholder="비밀번호" th:field="*{passwd}">
+      <span class="error"></span>
       <span th:errors="*{passwd}"></span>
     </div>
     <div>
       <input type="password" name="passwdchk" placeholder="비밀번호확인" th:field="*{passwdchk}">
+      <span class="error"></span>
       <span th:errors="*{passwdchk}"></span>
     </div>
     <div>
@@ -62,5 +65,35 @@
     </div>
     <div><button th:text="#{button.join}">가입</button></div>
   </form>
+  <script type="module">
+      import { ajax } from '/js/common.js';
+
+    const $email = document.querySelector('#frm input[type=email]');
+
+    const chkEmail = res => {
+      if(res.header.rtcd == '00'){
+        if(res.data){
+          $email.nextElementSibling.textContent='사용중인 아이디 입니다.'
+          $email.focus();
+        }else{
+          $email.nextElementSibling.textContent='사용가능한 아이디 입니다.'
+        }
+      }else if(res.header.rtcd == '01'){
+          $email.nextElementSibling.textContent=`${res.header.rtmsg}`
+          $email.focus();
+      }
+    }
+
+    const chkEmail_h = e =>{
+      console.log('blur');
+      const url = `/api/members/email?email=${$email.value}`;
+      ajax.get(url)
+          .then(res=>res.json())
+          .then(chkEmail)         //res=>chkEmail(res)
+          .catch(console.error);   //err=>console.error(err)
+    }
+    $email.addEventListener('blur',chkEmail_h,false);
+
+  </script>
 </body>
 </html>

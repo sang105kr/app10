@@ -72,12 +72,13 @@ public class MemberSVCImpl implements MemberSVC{
   }
 
   /**
+   * 회원아이디(email) 존재유무확인
    * @param email
    * @return
    */
   @Override
   public boolean isExist(String email) {
-    return false;
+    return memberDAO.isExist(email);
   }
 
   /**

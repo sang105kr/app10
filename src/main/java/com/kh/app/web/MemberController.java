@@ -98,6 +98,7 @@ public class MemberController {
     return "member/joinSuccess";
   }
 
+
   private String hobbyToString(List<String> hobby) {
     return StringUtils.join(hobby,",");
   }
