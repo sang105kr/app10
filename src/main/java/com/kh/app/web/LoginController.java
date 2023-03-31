@@ -38,7 +38,7 @@ public class LoginController {
       @Valid @ModelAttribute LoginForm loginForm,
       BindingResult bindingResult,
       HttpServletRequest httpServletRequest,
-      @RequestParam(required = false, defaultValue = "/") String redirectUrl
+      @RequestParam(value="redirectUrl",required = false, defaultValue = "/") String redirectUrl
       ){
 
     log.info("redirectUrl={}",redirectUrl);
