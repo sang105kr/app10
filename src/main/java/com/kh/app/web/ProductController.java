@@ -166,7 +166,6 @@ public class ProductController {
   //목록
   @GetMapping
   public String findAll(Model model){
-
     List<Product> products = productSVC.findAll();
     model.addAttribute("products",products);
     if (products.size() == 0) {

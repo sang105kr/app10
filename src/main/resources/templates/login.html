@@ -12,7 +12,7 @@
     <h3>로그인</h3>
     <hr>
     <div>
-      <form action="" th:action="@{/login}" th:method="post" th:object="${loginForm}">
+      <form action="" th:method="post" th:object="${loginForm}">
         <div th:if="${#fields.hasGlobalErrors()}">
           <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
         </div>

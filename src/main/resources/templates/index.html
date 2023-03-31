@@ -10,9 +10,21 @@
 <body>
   <h3>초기화면</h3>
   <hr>
+  <div th:if="${!session.isEmpty()}">
+    <p>
+      <a href="" th:href="@{/mypage}"><sapn th:text="${session.loginMember.nickname}"></sapn></a>
+      <span th:text="|(${session.loginMember.email})님 환영합니다!|"></span>
+    </p>
+    <p th:text="${session.loginMember.gubun}"></p>
+  </div>
   <ul>
-    <li><a href="" th:href="@{/login}">로그인</a></li>
-    <li><a href="" th:href="@{/members/add}">회원가입</a></li>
+    <th:bolck th:if="${session.isEmpty()}">
+      <li><a href="" th:href="@{/login}">로그인</a></li>
+      <li><a href="" th:href="@{/members/add}">회원가입</a></li>
+    </th:bolck>
+    <th:bolck th:unless="${session.isEmpty()}">
+      <li><a href="" th:href="@{/logout}">로그아웃</a></li>
+    </th:bolck>
     <li><a href="/products" th:href="@{/products}">상품관리-SSR</a></li>
     <li><a href="/csr/products" th:href="@{/csr/products}">상품관리-CSR</a></li>
   </ul>
