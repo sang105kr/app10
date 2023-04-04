@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+        });
+        calendar.render();
+
+        var calendar1 = new Calendar(calendarEl, {
+          events: [
+            {
+              title: 'BCH237',
+              start: '2023-03-31T10:30:00',
+              end: '2023-04-1T11:30:00',
+              extendedProps: {
+                department: 'BioChemistry',
+              },
+              description: 'Lecture',
+            },
+            // more events ...
+          ],
+          eventDidMount: function (info) {
+            console.log(info.event.extendedProps);
+            // {description: "Lecture", department: "BioChemistry"}
+          },
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="calendar"></div>
+  </body>
+</html>

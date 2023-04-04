@@ -12,7 +12,7 @@
 <div class="wrap">
   <h3 th:text="#{title.product.add}">상품등록</h3>
   <div>
-    <form id="frm" action="" method="post" th:object="${saveForm}">
+    <form id="frm" action="" method="post" th:object="${saveForm}" enctype="multipart/form-data">
       <div th:if="${#fields.hasGlobalErrors()}">
         <p class="field-error" th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
       </div>
@@ -34,6 +34,8 @@
         <span class="field-error"></span>
         <span class="field-error" th:errors="*{price}"></span>
       </div>
+      <div><label for="">일반첨부</label><input type="file" th:field="*{attachFile}"></div>
+      <div><label for="">이미지첨부</label><input type="file" th:field="*{imageFiles}" multiple ></div>
       <div>
         <button type="submit" th:text="#{button.add}" id="btnAdd">등록</button>
         <button type="button" th:text="#{button.list}" onclick="location.href='/products'">목록</button>

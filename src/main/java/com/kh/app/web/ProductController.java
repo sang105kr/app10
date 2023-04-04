@@ -1,7 +1,10 @@
 package com.kh.app.web;
 
+import com.kh.app.domain.common.svc.MultipartFileToUploadFile;
 import com.kh.app.domain.entity.Product;
+import com.kh.app.domain.entity.UploadFile;
 import com.kh.app.domain.product.svc.ProductSVC;
+import com.kh.app.web.common.AttachFileType;
 import com.kh.app.web.form.product.DetailForm;
 import com.kh.app.web.form.product.SaveForm;
 import com.kh.app.web.form.product.UpdateForm;
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class ProductController {
 
   private final ProductSVC productSVC;
+  private final MultipartFileToUploadFile multipartFileToUploadFile;
 
 //  public ProductController(ProductSVC productSVC) {
 //    this.productSVC = productSVC;
@@ -84,8 +88,14 @@ public class ProductController {
     product.setQuantity(saveForm.getQuantity());
     product.setPrice(saveForm.getPrice());
 
-    Long savedProductId = productSVC.save(product);
+    //파일첨부
+    UploadFile attachFile = multipartFileToUploadFile.convert(saveForm.getAttachFile(), AttachFileType.F010301);
+    List<UploadFile> imageFiles = multipartFileToUploadFile.convert(saveForm.getImageFiles(), AttachFileType.F010302);
+    imageFiles.add(attachFile);
+
+    Long savedProductId = productSVC.save(product,imageFiles);
     redirectAttributes.addAttribute("id",savedProductId);
+
     return "redirect:/products/{id}/detail";
   }
 

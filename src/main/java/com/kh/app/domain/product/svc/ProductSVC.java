@@ -1,6 +1,7 @@
 package com.kh.app.domain.product.svc;
 
 import com.kh.app.domain.entity.Product;
+import com.kh.app.domain.entity.UploadFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Optional;
 public interface ProductSVC {
   //등록
   Long save(Product product);
+  Long save(Product product, List<UploadFile> uploadFiles);
   //조회;
   Optional<Product> findById(Long productId);
   //수정
