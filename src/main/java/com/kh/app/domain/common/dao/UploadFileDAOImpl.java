@@ -43,8 +43,9 @@ public class UploadFileDAOImpl implements UploadFileDAO{
 
     StringBuffer sql = makeAddFileSql();
     if(uploadFiles.size() == 1){
-      SqlParameterSource param = new BeanPropertySqlParameterSource(uploadFiles.get(0));
-      template.update(sql.toString(),param);
+      addFile(uploadFiles.get(0));
+//      SqlParameterSource param = new BeanPropertySqlParameterSource(uploadFiles.get(0));
+//      template.update(sql.toString(),param);
     }else {
       SqlParameterSource[] params = SqlParameterSourceUtils.createBatch(uploadFiles);
       //배치 처리 : 여러건의 갱신작업을 한꺼번에 처리하므로 단건처리할때보다 성능이 좋다.
