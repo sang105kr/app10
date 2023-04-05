@@ -37,6 +37,7 @@ public class AttachFileController {
     Optional<UploadFile> uploadFile = uploadFileSVC.findFileByUploadFileId(uploadfileId);
     if(uploadFile.isEmpty()) new BizException("첨부파일을 찾을 수 없습니다.");
     log.info("첨부파일 경로={}",getStoreFilePath(uploadFile.get()));
+
     Resource resource = new UrlResource(getStoreFilePath(uploadFile.get()));
     //한글파일명 깨짐 방지를위한 인코딩
     String encodeUploadFileName = UriUtils.encode(uploadFile.get().getUpload_filename(), StandardCharsets.UTF_8);
@@ -58,10 +59,10 @@ public class AttachFileController {
     if(uploadFile.isEmpty()) new BizException("첨부파일을 찾을 수 없습니다.");
     log.info("이미지 경로={}",getStoreFilePath(uploadFile.get()));
     Resource resource = new UrlResource(getStoreFilePath(uploadFile.get()));
-    //한글파일명 깨짐 방지를위한 인코딩
-    String encodeUploadFileName = UriUtils.encode(uploadFile.get().getUpload_filename(), StandardCharsets.UTF_8);
-    //Http응답 메세지 헤더에 첨부파일이 있음을 알림
-    String contentDisposition = "attachment; filename="+ encodeUploadFileName;
+//    //한글파일명 깨짐 방지를위한 인코딩
+//    String encodeUploadFileName = UriUtils.encode(uploadFile.get().getUpload_filename(), StandardCharsets.UTF_8);
+//    //Http응답 메세지 헤더에 첨부파일이 있음을 알림
+//    String contentDisposition = "attachment; filename="+ encodeUploadFileName;
 
     return ResponseEntity.ok()  //응답코드 200
         .body(resource);
@@ -71,7 +72,9 @@ public class AttachFileController {
   private String getStoreFilePath(UploadFile metaInofOfuploadFile) {
     StringBuffer storeFilePath = new StringBuffer();
     storeFilePath.append("file:")
+        //  d:/attach/분류코드/
         .append(multipartFileToUploadFile.getFullPath(AttachFileType.F010301.valueOf(metaInofOfuploadFile.getCode())))
+        //  d:/attach/분류코드/xxx-yyy-xxx-uuu.png
         .append(metaInofOfuploadFile.getStore_filename());
     return storeFilePath.toString();
   }

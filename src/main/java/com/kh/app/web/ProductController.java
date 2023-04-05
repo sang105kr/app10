@@ -90,7 +90,7 @@ public class ProductController {
     product.setQuantity(saveForm.getQuantity());
     product.setPrice(saveForm.getPrice());
 
-    //파일첨부
+    //파일첨부에 대한 메타정보추출 & 물리파일 저장
     UploadFile attachFile = multipartFileToUploadFile.convert(saveForm.getAttachFile(), AttachFileType.F010301);
     List<UploadFile> imageFiles = multipartFileToUploadFile.convert(saveForm.getImageFiles(), AttachFileType.F010302);
     if(attachFile != null) imageFiles.add(attachFile);
@@ -110,13 +110,15 @@ public class ProductController {
   ){
     Optional<Product> findedProduct = productSVC.findById(id);
     Product product = findedProduct.orElseThrow();
-
+    
+    //상품정보
     DetailForm detailForm = new DetailForm();
     detailForm.setProductId(product.getProductId());
     detailForm.setPname(product.getPname());
     detailForm.setQuantity(product.getQuantity());
     detailForm.setPrice(product.getPrice());
 
+    //첨부파일조회
     List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301.name(), id);
     List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302.name(), id);
 

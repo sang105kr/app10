@@ -237,9 +237,9 @@ public class MemberDAOImpl implements MemberDAO{
     StringBuffer sql = new StringBuffer();
     sql.append("select email ");
     sql.append("  from member ");
-    sql.append(" where nickname = :nackname ");
+    sql.append(" where nickname = :nickname ");
 
-    Map<String, String> param = Map.of("nackname", nickname);
+    Map<String, String> param = Map.of("nickname", nickname);
     List<String> result = template.query(
         sql.toString(),
         param,
