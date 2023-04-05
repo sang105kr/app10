@@ -5,12 +5,14 @@ import com.kh.app.domain.entity.Product;
 import com.kh.app.domain.entity.UploadFile;
 import com.kh.app.domain.product.dao.ProductDAO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,8 +29,11 @@ public class ProductSVCImpl implements ProductSVC{
   @Override
   public Long save(Product product, List<UploadFile> uploadFiles) {
     Long productId = save(product);
-    uploadFiles.stream().forEach(file->file.setRid(productId));
-    uploadFileDAO.addFiles(uploadFiles);
+    if (uploadFiles.size() > 0) {
+      uploadFiles.stream().forEach(file->file.setRid(productId));
+      uploadFileDAO.addFiles(uploadFiles);
+    }
+
     return productId;
   }
 
@@ -43,8 +48,25 @@ public class ProductSVCImpl implements ProductSVC{
   }
 
   @Override
+  public int update(Long productId, Product product, List<UploadFile> uploadFiles) {
+    productDAO.update(productId, product);
+    if (uploadFiles.size() > 0) {
+      uploadFiles.stream().forEach(file->file.setRid(productId));
+      uploadFileDAO.addFiles(uploadFiles);
+    }
+    return 0;
+  }
+
+  @Override
   public int delete(Long productId) {
     return productDAO.delete(productId);
+  }
+
+  @Override
+  public int delete(Long productId, String code) {
+    int cnt = productDAO.delete(productId);
+    uploadFileDAO.deleteFileByCodeWithRid(code,productId);
+    return cnt;
   }
 
   @Override

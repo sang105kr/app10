@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
-class UploadFileDAOImplTest {
+class UploadFileSVCImplTest {
 
   @Autowired
   private UploadFileDAO uploadFileDAO;

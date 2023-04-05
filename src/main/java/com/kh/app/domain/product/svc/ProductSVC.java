@@ -14,8 +14,10 @@ public interface ProductSVC {
   Optional<Product> findById(Long productId);
   //수정
   int update(Long productId,Product product);
+  int update(Long productId,Product product,List<UploadFile> uploadFiles);
   //삭제
   int delete(Long productId);
+  int delete(Long productId, String code);
   /**
    * 부분삭제
    * @param productIds

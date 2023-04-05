@@ -12,7 +12,7 @@
 <div class="wrap">
   <h3>상품수정</h3>
   <div>
-    <form action="" method="post" th:object="${updateForm}">
+    <form id="frm" action="" method="post" th:object="${updateForm}" enctype="multipart/form-data">
       <div>
         <label for="productId" >상품번호</label>
         <input type="text" name="productId" readonly th:field="*{productId}">
@@ -35,10 +35,28 @@
         <span class="field-error"></span>
         <span class="field-error" th:errors="*{price}"></span>
       </div>
+      <div><label for="">일반첨부</label><input type="file" th:field="*{attachFile}"></div>
+      <div><label for="">이미지첨부</label><input type="file" th:field="*{imageFiles}" multiple ></div>
       <div>
         <button type="submit" id="btnSave" th:text="#{button.update}">저장</button>
         <button type="button" id="btnCancel" th:text="#{button.cancel}">취소</button>
         <button type="button" id="btnFindAll" th:text="#{button.list}">목록</button>
+      </div>
+      <div>
+        <div><label>첨부</label></div>
+        <div>
+          <div>
+            <a href="" th:href="@{|/attach/down/*{attachedFile.uploadfileId}|}" th:text="*{attachedFile.upload_filename}"></a>
+          </div>
+          <div th:each="file : *{imagedFiles}">
+            <th:block th:unless="${#strings.contains(file.ftype,'image')}" >
+              <a href="" th:href="@{|/attach/down/${file.uploadfileId}|}" th:text="${file.upload_filename}"></a>
+            </th:block>
+            <th:block th:if="${#strings.contains(file.ftype,'image')}" >
+              <img th:src="@{|/attach/view/${file.uploadfileId}|}" th:width="50px" th:height="50px">
+            </th:block>
+          </div>
+        </div>
       </div>
     </form>
   </div>
