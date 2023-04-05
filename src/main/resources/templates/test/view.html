@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>view</title>
+</head>
+<body>
+  <h3>결과화면</h3>
+
+  <p th:text="${member.id}"></p>
+  <p th:text="${member.age}"></p>
+  <p th:text="${var1}"></p>
+  <p th:text="${var2}"></p>
+  <p th:text="${var3}"></p>
+  <ul>
+<!--    <li th:each="ele : ${list}" th:text="${ele}">a</li>-->
+    <th:block th:each="ele : ${list}">
+        <li th:text="${ele}">b</li>
+    </th:block>
+  </ul>
+
+  <div th:with="var=${member.id}">
+    <p>[[${var}]]</p>
+  </div>
+</body>
+</html>
