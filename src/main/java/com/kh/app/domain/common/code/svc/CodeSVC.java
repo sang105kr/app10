@@ -1,4 +1,4 @@
-package com.kh.app.domain.common.svc;
+package com.kh.app.domain.common.code.svc;
 
 import com.kh.app.domain.entity.Code;
 

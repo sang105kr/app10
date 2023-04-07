@@ -28,5 +28,8 @@
     <li><a href="/products" th:href="@{/products}">상품관리-SSR</a></li>
     <li><a href="/csr/products" th:href="@{/csr/products}">상품관리-CSR</a></li>
   </ul>
+  <th:block th:replace="~{fragment/footer::mypage(p2='홍길동',p1=30)}">
+
+  </th:block>
 </body>
 </html>

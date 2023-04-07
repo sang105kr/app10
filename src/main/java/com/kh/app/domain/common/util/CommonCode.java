@@ -1,6 +1,6 @@
 package com.kh.app.domain.common.util;
 
-import com.kh.app.domain.common.dao.CodeDAO;
+import com.kh.app.domain.common.code.dao.CodeDAO;
 import com.kh.app.domain.entity.Code;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

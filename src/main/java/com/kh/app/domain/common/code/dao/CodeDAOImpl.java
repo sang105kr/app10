@@ -1,4 +1,4 @@
-package com.kh.app.domain.common.dao;
+package com.kh.app.domain.common.code.dao;
 
 import com.kh.app.domain.entity.Code;
 import lombok.RequiredArgsConstructor;

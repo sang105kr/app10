@@ -1,6 +1,7 @@
-package com.kh.app.domain.common.dao;
+package com.kh.app.domain.common.file.dao;
 
 import com.kh.app.domain.entity.UploadFile;
+import com.kh.app.web.common.AttachFileType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -77,7 +78,7 @@ public class UploadFileDAOImpl implements UploadFileDAO{
 
   //조회
   @Override
-  public List<UploadFile> findFilesByCodeWithRid(String code, Long rid) {
+  public List<UploadFile> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid) {
     StringBuffer sql = new StringBuffer();
 
     sql.append("SELECT  ");
@@ -96,7 +97,7 @@ public class UploadFileDAOImpl implements UploadFileDAO{
 
     return template.query(
         sql.toString(),
-        Map.of("code",code,"rid",rid),
+        Map.of("code",attachFileType.name(),"rid",rid),
         BeanPropertyRowMapper.newInstance(UploadFile.class));
   }
 
@@ -125,17 +126,17 @@ public class UploadFileDAOImpl implements UploadFileDAO{
     sql.append("delete from uploadfile ");
     sql.append(" where uploadfile_id = :uploadfile_id ");
 
-    return template.update(sql.toString(), Map.of("uploadFile_id",uploadfileId));
+    return template.update(sql.toString(), Map.of("uploadfile_id",uploadfileId));
   }
 
   // 첨부파일 삭제 by code, rid
   @Override
-  public int deleteFileByCodeWithRid(String code, Long rid) {
+  public int deleteFileByCodeWithRid(AttachFileType attachFileType, Long rid) {
     StringBuffer sql = new StringBuffer();
     sql.append("delete from uploadfile ");
     sql.append(" where code = :code ");
     sql.append("   and rid = :rid ");
 
-    return template.update(sql.toString(),Map.of("code",code,"rid",rid));
+    return template.update(sql.toString(),Map.of("code",attachFileType.name(),"rid",rid));
   }
 }

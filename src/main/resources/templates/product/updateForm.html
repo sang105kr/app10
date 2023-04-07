@@ -42,27 +42,30 @@
         <button type="button" id="btnCancel" th:text="#{button.cancel}">취소</button>
         <button type="button" id="btnFindAll" th:text="#{button.list}">목록</button>
       </div>
-      <div>
+      <div id="attachFiles">
         <div><label>첨부</label></div>
         <div>
           <div>
             <a href="" th:href="@{|/attach/down/*{attachedFile.uploadfileId}|}" th:text="*{attachedFile.upload_filename}"></a>
+            <a href="#" class="btn delBtn" th:data-fid="*{attachedFile.uploadfileId}">삭제</a>
           </div>
           <div th:each="file : *{imagedFiles}">
-            <th:block th:unless="${#strings.contains(file.ftype,'image')}" >
+            <div th:unless="${#strings.contains(file.ftype,'image')}" >
               <a href="" th:href="@{|/attach/down/${file.uploadfileId}|}" th:text="${file.upload_filename}"></a>
-            </th:block>
-            <th:block th:if="${#strings.contains(file.ftype,'image')}" >
+              <a href="#" class="btn delBtn" th:data-fid="${file.uploadfileId}">삭제</a>
+            </div>
+            <div th:if="${#strings.contains(file.ftype,'image')}">
               <img th:src="@{|/attach/view/${file.uploadfileId}|}" th:width="50px" th:height="50px">
-            </th:block>
+              <a href="#" class="btn delBtn" th:data-fid="${file.uploadfileId}">삭제</a>
+            </div>
           </div>
         </div>
       </div>
     </form>
   </div>
 </div>
-<script>
-
+<script type="module">
+  import {ajax} from "/js/common.js";
   const $btnCancel = document.getElementById('btnCancel');
   const $btnFindAll = document.getElementById('btnFindAll');
 
@@ -129,6 +132,25 @@
     frm.submit();
   }
   btnSave.addEventListener('click',add_h,false);
+
+  const attachFiles = (e,res) => {
+    if(res.header.rtcd == '00'){
+      e.target.closest('div').remove();
+    }
+  }
+  const attachFiles_h = e => {
+    if(e.target.classList.contains('delBtn')){
+      if(!confirm('삭제하시겠습니까')) return;
+
+      const url = `/attach/${e.target.dataset.fid}`;
+      ajax.delete(url)
+        .then(res=>res.json())
+        .then(res=>attachFiles(e,res))
+        .catch(console.log);
+    }
+  }
+  document.getElementById('attachFiles').addEventListener('click',attachFiles_h,false);
+
 </script>
 </body>
 </html>

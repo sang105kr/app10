@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+</head>
+<body>
+  <footer th:fragment="common">
+    <p>공통</p>
+  </footer>
+  <footer th:fragment="mypage(p1,p2)">
+    <p th:text="${p1}">내페이지1</p>
+    <p th:text="${p2}">내페이지2</p>
+  </footer>
+</body>
+</html>

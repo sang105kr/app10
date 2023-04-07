@@ -1,6 +1,8 @@
 package com.kh.app.domain.common.dao;
 
+import com.kh.app.domain.common.file.dao.UploadFileDAO;
 import com.kh.app.domain.entity.UploadFile;
+import com.kh.app.web.common.AttachFileType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +52,7 @@ class UploadFileSVCImplTest {
     }
 
     uploadFileDAO.addFiles(files);
-    List<UploadFile> list = uploadFileDAO.findFilesByCodeWithRid("F010302", 10L);
+    List<UploadFile> list = uploadFileDAO.findFilesByCodeWithRid(AttachFileType.F010302, 10L);
     Assertions.assertThat(list.size()).isEqualTo(5);
   }
 }

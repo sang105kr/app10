@@ -1,7 +1,6 @@
 package com.kh.app.web;
 
-import com.kh.app.domain.common.svc.MultipartFileToUploadFile;
-import com.kh.app.domain.common.svc.UploadFileSVC;
+import com.kh.app.domain.common.file.svc.UploadFileSVC;
 import com.kh.app.domain.entity.Product;
 import com.kh.app.domain.entity.UploadFile;
 import com.kh.app.domain.product.svc.ProductSVC;
@@ -28,7 +27,6 @@ import java.util.Optional;
 public class ProductController {
 
   private final ProductSVC productSVC;
-  private final MultipartFileToUploadFile multipartFileToUploadFile;
   private final UploadFileSVC uploadFileSVC;
 
 //  public ProductController(ProductSVC productSVC) {
@@ -91,8 +89,8 @@ public class ProductController {
     product.setPrice(saveForm.getPrice());
 
     //파일첨부에 대한 메타정보추출 & 물리파일 저장
-    UploadFile attachFile = multipartFileToUploadFile.convert(saveForm.getAttachFile(), AttachFileType.F010301);
-    List<UploadFile> imageFiles = multipartFileToUploadFile.convert(saveForm.getImageFiles(), AttachFileType.F010302);
+    UploadFile attachFile = uploadFileSVC.convert(saveForm.getAttachFile(), AttachFileType.F010301);
+    List<UploadFile> imageFiles = uploadFileSVC.convert(saveForm.getImageFiles(), AttachFileType.F010302);
     if(attachFile != null) imageFiles.add(attachFile);
 
     //등록
@@ -119,8 +117,8 @@ public class ProductController {
     detailForm.setPrice(product.getPrice());
 
     //첨부파일조회
-    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301.name(), id);
-    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302.name(), id);
+    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
+    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
 
     detailForm.setAttachedFile(attachedFile.get(0));
     detailForm.setImagedFiles(imagedFiles);
@@ -145,8 +143,8 @@ public class ProductController {
     updateForm.setPrice(product.getPrice());
 
     //파일첨부조회
-    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301.name(), id);
-    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302.name(), id);
+    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
+    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
 
     updateForm.setAttachedFile(attachedFile.get(0));
     updateForm.setImagedFiles(imagedFiles);
@@ -177,8 +175,8 @@ public class ProductController {
     product.setPrice(updateForm.getPrice());
     
     //파일첨부
-    UploadFile attachFile = multipartFileToUploadFile.convert(updateForm.getAttachFile(), AttachFileType.F010301);
-    List<UploadFile> imageFiles = multipartFileToUploadFile.convert(updateForm.getImageFiles(), AttachFileType.F010302);
+    UploadFile attachFile = uploadFileSVC.convert(updateForm.getAttachFile(), AttachFileType.F010301);
+    List<UploadFile> imageFiles = uploadFileSVC.convert(updateForm.getImageFiles(), AttachFileType.F010302);
     if(attachFile != null) imageFiles.add(attachFile);
 
     //수정
@@ -191,9 +189,8 @@ public class ProductController {
   //삭제
   @GetMapping("/{id}/del")
   public String deleteById(@PathVariable("id") Long productId){
-
-    productSVC.delete(productId);
-
+    productSVC.delete(productId,AttachFileType.F010301);
+    productSVC.delete(productId,AttachFileType.F010302);
     return "redirect:/products";
   }
 

@@ -2,6 +2,7 @@ package com.kh.app.domain.product.svc;
 
 import com.kh.app.domain.entity.Product;
 import com.kh.app.domain.entity.UploadFile;
+import com.kh.app.web.common.AttachFileType;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface ProductSVC {
   int update(Long productId,Product product,List<UploadFile> uploadFiles);
   //삭제
   int delete(Long productId);
-  int delete(Long productId, String code);
+  int delete(Long productId, AttachFileType attachFileType);
   /**
    * 부분삭제
    * @param productIds

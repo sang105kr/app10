@@ -1,11 +1,13 @@
-package com.kh.app.domain.common.svc;
+package com.kh.app.domain.common.file.dao;
 
 import com.kh.app.domain.entity.UploadFile;
+import com.kh.app.web.common.AttachFileType;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UploadFileSVC {
+public interface UploadFileDAO {
+
   /**
    * 업로드 파일 등록 - 단건
    * @param uploadFile
@@ -25,7 +27,7 @@ public interface UploadFileSVC {
    * @param rid
    * @return
    */
-  List<UploadFile> findFilesByCodeWithRid(String code,Long rid);
+  List<UploadFile> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid);
 
   /**
    * 첨부파일조회
@@ -48,5 +50,5 @@ public interface UploadFileSVC {
    * @param rid 첨부파일아이디
    * @return 삭제한 레코드수
    */
-  int deleteFileByCodeWithRid(String code, Long rid);
+  int deleteFileByCodeWithRid(AttachFileType attachFileType, Long rid);
 }

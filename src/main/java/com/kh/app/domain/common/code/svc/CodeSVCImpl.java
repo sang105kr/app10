@@ -1,6 +1,6 @@
-package com.kh.app.domain.common.svc;
+package com.kh.app.domain.common.code.svc;
 
-import com.kh.app.domain.common.dao.CodeDAO;
+import com.kh.app.domain.common.code.dao.CodeDAO;
 import com.kh.app.domain.entity.Code;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
