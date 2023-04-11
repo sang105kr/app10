@@ -1,12 +1,15 @@
 package com.kh.app.web;
 
+import com.kh.app.domain.common.mail.MailService;
 import com.kh.app.domain.common.util.CommonCode;
 import com.kh.app.domain.common.util.PasswordGenerator;
 import com.kh.app.domain.entity.Code;
 import com.kh.app.domain.entity.Member;
 import com.kh.app.domain.member.svc.MemberSVC;
 import com.kh.app.web.common.CodeDecode;
+import com.kh.app.web.form.member.FindPWForm;
 import com.kh.app.web.form.member.JoinForm;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,7 @@ public class MemberController {
 
   private final MemberSVC memberSVC;
   private final CommonCode commonCode;
+  private final MailService ms;
 
   @ModelAttribute("hobbies")
   public List<CodeDecode> hobbies(){
@@ -59,7 +63,6 @@ public class MemberController {
         .forEach(ele->codes.add(new CodeDecode(ele.getCodeId(),ele.getDecode())));
     return codes;
   }
-
 
 
   //회원가입양식
@@ -105,23 +108,38 @@ public class MemberController {
 
 //  GET	/members/findPW
   @GetMapping("/findPW")
-  public String findPWForm(){
+//  public String findPWForm(Model model){
+//
+//    model.addAttribute("findPWForm", new FindPWForm());
+//    return "member/findPW";
+//  }
 
+  public String findPWForm(@ModelAttribute FindPWForm findPWForm){
     return "member/findPW";
   }
 
-  @PostMapping("findPW")
-  public String findPW(@RequestParam String email, @RequestParam String nickname){
+  @PostMapping("/findPW")
+  public String findPW(
+      @Valid @ModelAttribute FindPWForm findPWForm,
+      BindingResult bindingResult,
+      HttpServletRequest request,
+      Model model
+  ){
+    log.info("findPWForm={}", findPWForm);
+
+    if(bindingResult.hasErrors()){
+      return "member/findPW";
+    }
 
     //1) email,nickname 인 회원 찾기
-    boolean isExist = memberSVC.isExistByEmailAndNickname(email, nickname);
+    boolean isExist = memberSVC.isExistByEmailAndNickname(findPWForm.getEmail(), findPWForm.getNickname());
     if(!isExist){
 
       return "member/findPW";
     }
     //2) 임시비밀 번호 생성
     PasswordGenerator.PasswordGeneratorBuilder passwordGeneratorBuilder = new PasswordGenerator.PasswordGeneratorBuilder();
-    String pwd = passwordGeneratorBuilder
+    String tmpPwd = passwordGeneratorBuilder
         .useDigits(true)  //숫자포함여부
         .useLower(true)   //소문자포함
         .useUpper(true)   //대문자포함
@@ -130,13 +148,40 @@ public class MemberController {
         .generate(6); //비밀번호 자리수
 
     //3) 회원의 비밀번호를 임시비밀번호로 변경
-
+    memberSVC.changePasswd(findPWForm.getEmail(),tmpPwd);
 
     //4) 메일 발송.
+    String subject = "신규 비밀번호 전송";
+
+    //로긴주소
+    StringBuilder url = new StringBuilder();
+    url.append("http://" + request.getServerName());    //localhost
+    url.append(":" + request.getServerPort());          //prot
+    url.append(request.getContextPath());               // /
+    url.append("/login");
+
+    //메일본문내용
+    StringBuilder sb = new StringBuilder();
+    sb.append("<!DOCTYPE html>");
+    sb.append("<html lang='ko'>");
+    sb.append("<head>");
+    sb.append("  <meta charset='UTF-8'>");
+    sb.append("  <meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+    sb.append("  <title>임시 비밀번호 발송</title>");
+    sb.append("</head>");
+    sb.append("<body>");
+    sb.append("  <h1>신규비밀번호</h1>");
+    sb.append("  <p>아래 비밀번호로 로그인 하셔서 비밀번호를 변경하세요</p>");
+    sb.append("  <p>비밀번호 :" + tmpPwd + "</p>");
+    sb.append("  <a href='"+ url +"'>로그인</a>");
+    sb.append("</body>");
+    sb.append("</html>");
+
+    ms.sendMail(findPWForm.getEmail(), subject , sb.toString());
+
+    model.addAttribute("info", "회원 이메일로 임시번호가 발송되었습니다");
 
     return "member/findPW";
   }
-
-
 
 }

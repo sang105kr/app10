@@ -25,7 +25,10 @@
           <span th:errors="*{passwd}"></span>
         </div>
         <div><button>로그인</button></div>
-        <div><span><a href="#">아이디찾기</a></span><span><a href="#">비밀번호찾기</a></span></div>
+        <div>
+          <span><a href="#">아이디찾기</a></span>
+          <span><a href="#" th:href="@{/members/findPW}">비밀번호찾기</a></span>
+        </div>
       </form>
     </div>
   </div>
