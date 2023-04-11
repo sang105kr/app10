@@ -249,4 +249,33 @@ public class MemberDAOImpl implements MemberDAO{
     return (result.size() == 1) ? Optional.of(result.get(0)) : Optional.empty();
   }
 
+  @Override
+  public boolean isExistByEmailAndNickname(String email, String nickname) {
+    boolean isExist = false;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append("select count(*) ");
+    sql.append("  from member ");
+    sql.append(" where email = :email ");
+    sql.append("   and nickname = :nickname ");
+
+    Map<String, String> param = Map.of("email",email,"nickname",nickname);
+
+    Integer integer = template.queryForObject(sql.toString(), param, Integer.class);
+    if (integer == 1) isExist = true;
+
+    return isExist;
+  }
+
+  //비밀번호변경
+  @Override
+  public void changePasswd(String email, String passwd) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("update member ");
+    sql.append("   set passwd = :passwd ");
+    sql.append(" where email = :email ");
+
+    Map<String, String> param = Map.of("email",email,"passwd",passwd);
+    template.update(sql.toString(),param);
+  }
 }

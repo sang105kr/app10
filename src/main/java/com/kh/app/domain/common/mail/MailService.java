@@ -20,7 +20,7 @@ public class MailService {
 	private SimpleMailMessage simpleMessage = new SimpleMailMessage();
 
 	@Value("${spring.mail.username}")
-	private String from;
+	private String from; //송신자
 	/**
 	 * 메일전송
 	 * @param to  : 수신자

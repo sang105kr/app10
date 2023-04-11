@@ -51,4 +51,28 @@ class MemberDAOImplTest {
     member = memberDAO.login("test1@kh.com", "12345");
     Assertions.assertThat(member.isPresent()).isFalse();
   }
+
+  @Test
+  @DisplayName("비밀번호찾기")
+  void isExistByEmailAndNickname(){
+
+    boolean isExist = memberDAO.isExistByEmailAndNickname("test1@kh.com", "테스터1");
+    Assertions.assertThat(isExist).isTrue();
+
+    isExist = memberDAO.isExistByEmailAndNickname("test1111@kh.com", "테스터1");
+    Assertions.assertThat(isExist).isFalse();
+
+  }
+
+  @Test
+  @DisplayName("비밀번호변경")
+  void changePasswd(){
+
+    String email = "test1@kh.com";
+    String passwd = "9999";
+    memberDAO.changePasswd(email, passwd);
+    Optional<Member> member = memberDAO.findByEmail(email);
+    Assertions.assertThat(member.get().getPasswd()).isEqualTo(passwd);
+
+  }
 }

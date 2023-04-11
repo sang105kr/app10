@@ -36,4 +36,9 @@ public interface MemberSVC {
 
   //아이디찾기
   Optional<String> findEmailByNickname(String nickname);
+
+  //비밀번호찾기
+  boolean isExistByEmailAndNickname(String email, String nickname);
+
+  void changePasswd(String email, String passwd);
 }

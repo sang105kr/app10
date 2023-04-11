@@ -101,4 +101,14 @@ public class MemberSVCImpl implements MemberSVC{
   public Optional<String> findEmailByNickname(String nickname) {
     return Optional.empty();
   }
+
+  @Override
+  public boolean isExistByEmailAndNickname(String email, String nickname) {
+    return memberDAO.isExistByEmailAndNickname(email, nickname);
+  }
+
+  @Override
+  public void changePasswd(String email, String passwd) {
+    memberDAO.changePasswd(email,passwd);
+  }
 }

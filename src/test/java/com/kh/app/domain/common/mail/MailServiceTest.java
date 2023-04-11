@@ -16,6 +16,10 @@ class MailServiceTest {
 
   @Test
   void sendSimpleMail() {
-    mailService.sendMail("sang105kr@gmail.com","test","test");
+    StringBuffer str = new StringBuffer();
+    str.append("<html>");
+    str.append("<a href='http://localhost/login'>로그인</a>");
+    str.append("</html>");
+    mailService.sendMail("sang105kr@gmail.com","제목",str.toString());
   }
 }

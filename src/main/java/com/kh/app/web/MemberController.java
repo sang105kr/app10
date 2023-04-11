@@ -1,6 +1,7 @@
 package com.kh.app.web;
 
 import com.kh.app.domain.common.util.CommonCode;
+import com.kh.app.domain.common.util.PasswordGenerator;
 import com.kh.app.domain.entity.Code;
 import com.kh.app.domain.entity.Member;
 import com.kh.app.domain.member.svc.MemberSVC;
@@ -12,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
@@ -102,4 +100,43 @@ public class MemberController {
   private String hobbyToString(List<String> hobby) {
     return StringUtils.join(hobby,",");
   }
+
+
+
+//  GET	/members/findPW
+  @GetMapping("/findPW")
+  public String findPWForm(){
+
+    return "member/findPW";
+  }
+
+  @PostMapping("findPW")
+  public String findPW(@RequestParam String email, @RequestParam String nickname){
+
+    //1) email,nickname 인 회원 찾기
+    boolean isExist = memberSVC.isExistByEmailAndNickname(email, nickname);
+    if(!isExist){
+
+      return "member/findPW";
+    }
+    //2) 임시비밀 번호 생성
+    PasswordGenerator.PasswordGeneratorBuilder passwordGeneratorBuilder = new PasswordGenerator.PasswordGeneratorBuilder();
+    String pwd = passwordGeneratorBuilder
+        .useDigits(true)  //숫자포함여부
+        .useLower(true)   //소문자포함
+        .useUpper(true)   //대문자포함
+        .usePunctuation(false) //특수문자포함
+        .build()
+        .generate(6); //비밀번호 자리수
+
+    //3) 회원의 비밀번호를 임시비밀번호로 변경
+
+
+    //4) 메일 발송.
+
+    return "member/findPW";
+  }
+
+
+
 }
