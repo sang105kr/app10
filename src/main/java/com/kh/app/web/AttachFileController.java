@@ -52,7 +52,7 @@ public class AttachFileController {
   }
 
   //이미지 뷰
-  @GetMapping("/view/{fid}")
+  @GetMapping("/view/{fid}")   //  http://localhost:9080/attach/view/231321
   public ResponseEntity<Resource> viewAttach(
       @PathVariable("fid") Long uploadfileId
   ) throws MalformedURLException {

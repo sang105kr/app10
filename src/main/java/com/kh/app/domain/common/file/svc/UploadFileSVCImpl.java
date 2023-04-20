@@ -39,7 +39,7 @@ public class UploadFileSVCImpl implements UploadFileSVC{
   }
 
   @Override
-  public List<UploadFile> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid) {
+  public Optional<List<UploadFile>> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid) {
     return uploadFileDAO.findFilesByCodeWithRid(attachFileType, rid);
   }
 

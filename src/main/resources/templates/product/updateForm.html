@@ -45,18 +45,18 @@
       <div id="attachFiles">
         <div><label>첨부</label></div>
         <div>
-          <div>
-            <a href="" th:href="@{|/attach/down/*{attachedFile.uploadfileId}|}" th:text="*{attachedFile.upload_filename}"></a>
-            <a href="#" class="btn delBtn" th:data-fid="*{attachedFile.uploadfileId}">삭제</a>
+          <div th:if="*{attachedFile} != null">
+            <a href="" th:href="@{|/attach/down/*{attachedFile?.uploadfileId}|}" th:text="*{attachedFile?.upload_filename}"></a>
+            <a href="#" class="btn delBtn" th:data-fid="*{attachedFile?.uploadfileId}">삭제</a>
           </div>
           <div th:each="file : *{imagedFiles}">
             <div th:unless="${#strings.contains(file.ftype,'image')}" >
-              <a href="" th:href="@{|/attach/down/${file.uploadfileId}|}" th:text="${file.upload_filename}"></a>
+              <a href="" th:href="@{|/attach/down/${file?.uploadfileId}|}" th:text="${file?.upload_filename}"></a>
               <a href="#" class="btn delBtn" th:data-fid="${file.uploadfileId}">삭제</a>
             </div>
             <div th:if="${#strings.contains(file.ftype,'image')}">
-              <img th:src="@{|/attach/view/${file.uploadfileId}|}" th:width="50px" th:height="50px">
-              <a href="#" class="btn delBtn" th:data-fid="${file.uploadfileId}">삭제</a>
+              <img th:src="@{|/attach/view/${file?.uploadfileId}|}" th:width="50px" th:height="50px">
+              <a href="#" class="btn delBtn" th:data-fid="${file?.uploadfileId}">삭제</a>
             </div>
           </div>
         </div>

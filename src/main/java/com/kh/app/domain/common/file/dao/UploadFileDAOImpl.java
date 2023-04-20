@@ -78,7 +78,7 @@ public class UploadFileDAOImpl implements UploadFileDAO{
 
   //조회
   @Override
-  public List<UploadFile> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid) {
+  public Optional<List<UploadFile>> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid) {
     StringBuffer sql = new StringBuffer();
 
     sql.append("SELECT  ");
@@ -95,10 +95,13 @@ public class UploadFileDAOImpl implements UploadFileDAO{
     sql.append(" WHERE CODE = :code  ");
     sql.append("   AND RID = :rid  ");
 
-    return template.query(
+    List<UploadFile> result = template.query(
         sql.toString(),
-        Map.of("code",attachFileType.name(),"rid",rid),
+        Map.of("code", attachFileType.name(), "rid", rid),
         BeanPropertyRowMapper.newInstance(UploadFile.class));
+
+    return result.size() > 0 ? Optional.of(result) : Optional.empty();
+
   }
 
   //첨부파일 조회

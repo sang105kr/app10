@@ -36,8 +36,8 @@
       <div>
         <div><label>첨부</label></div>
         <div>
-          <div>
-            <a href="" th:href="@{|/attach/down/*{attachedFile.uploadfileId}|}" th:text="*{attachedFile.upload_filename}"></a>
+          <div th:if="*{attachedFile} != null">
+            <a href="" th:href="@{|/attach/down/*{attachedFile?.uploadfileId}|}" th:text="*{attachedFile?.upload_filename}"></a>
           </div>
           <div th:each="file : *{imagedFiles}">
             <th:block th:unless="${#strings.contains(file.ftype,'image')}" >

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -52,7 +53,7 @@ class UploadFileSVCImplTest {
     }
 
     uploadFileDAO.addFiles(files);
-    List<UploadFile> list = uploadFileDAO.findFilesByCodeWithRid(AttachFileType.F010302, 10L);
-    Assertions.assertThat(list.size()).isEqualTo(5);
+    Optional<List<UploadFile>> list = uploadFileDAO.findFilesByCodeWithRid(AttachFileType.F010302, 10L);
+    Assertions.assertThat(list.get().size()).isEqualTo(5);
   }
 }

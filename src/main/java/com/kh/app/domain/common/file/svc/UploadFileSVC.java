@@ -27,7 +27,7 @@ public interface UploadFileSVC {
    * @param rid
    * @return
    */
-  List<UploadFile> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid);
+  Optional<List<UploadFile>> findFilesByCodeWithRid(AttachFileType attachFileType, Long rid);
 
   /**
    * 첨부파일조회

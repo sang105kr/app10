@@ -70,6 +70,13 @@
     }
     const del_h = e =>{
       e.preventDefault();
+      //체크박스 체크유무확인
+      const $chkboxes = document.getElementById('frm').querySelectorAll(`input[name='chk']`);
+      if(Array.from($chkboxes).every(ele=>!ele.checked)) {
+        alert('삭제항목이 없습니다');
+        return;
+      }
+
       if(!confirm('삭제하시겠습니까')) return;
       document.getElementById('frm').submit();
     }

@@ -117,11 +117,13 @@ public class ProductController {
     detailForm.setPrice(product.getPrice());
 
     //첨부파일조회
-    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
-    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
+    Optional<List<UploadFile>> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
+    Optional<List<UploadFile>> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
 
-    detailForm.setAttachedFile(attachedFile.get(0));
-    detailForm.setImagedFiles(imagedFiles);
+    if(attachedFile.isPresent()) {
+      detailForm.setAttachedFile(attachedFile.get().size() > 0 ? attachedFile.get().get(0) : null);
+    }
+    detailForm.setImagedFiles(imagedFiles.orElse(null));
 
     model.addAttribute("detailForm",detailForm);
     return "product/detailForm";
@@ -143,11 +145,12 @@ public class ProductController {
     updateForm.setPrice(product.getPrice());
 
     //파일첨부조회
-    List<UploadFile> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
-    List<UploadFile> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
-
-    updateForm.setAttachedFile(attachedFile.get(0));
-    updateForm.setImagedFiles(imagedFiles);
+    Optional<List<UploadFile>> attachedFile = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010301, id);
+    Optional<List<UploadFile>> imagedFiles = uploadFileSVC.findFilesByCodeWithRid(AttachFileType.F010302, id);
+    if(attachedFile.isPresent()) {
+      updateForm.setAttachedFile(attachedFile.get().size() > 0 ? attachedFile.get().get(0) : null);
+    }
+    updateForm.setImagedFiles(imagedFiles.orElse(null));
 
     model.addAttribute("updateForm",updateForm);
     return "product/updateForm";

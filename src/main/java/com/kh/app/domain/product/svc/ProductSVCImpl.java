@@ -70,9 +70,11 @@ public class ProductSVCImpl implements ProductSVC{
     int cnt = productDAO.delete(productId);
 
     //2) 물리파일 삭제
-    List<UploadFile> uploadFiles = uploadFileSVC.findFilesByCodeWithRid(attachFileType, productId);
-    List<String> files = uploadFiles.stream().map(file -> file.getStore_filename()).collect(Collectors.toList());
-    uploadFileSVC.deleteFiles(attachFileType, files);
+    Optional<List<UploadFile>> uploadFiles = uploadFileSVC.findFilesByCodeWithRid(attachFileType, productId);
+    if(uploadFiles.isPresent()) {
+      List<String> files = uploadFiles.get().stream().map(file -> file.getStore_filename()).collect(Collectors.toList());
+      uploadFileSVC.deleteFiles(attachFileType, files);
+    }
 
 //    for (UploadFile uploadFile : uploadFiles) {
 //      multipartFileToUploadFile.deleteFile(attachFileType, uploadFile.getStore_filename());
